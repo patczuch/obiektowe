@@ -23,12 +23,17 @@ public class Vector2dTest {
     {
         Assertions.assertTrue(new Vector2d(2, 0).precedes(new Vector2d(4,1)));
         Assertions.assertTrue(new Vector2d(-2, -1).precedes(new Vector2d(-1,0)));
+        Assertions.assertFalse(new Vector2d(-1,0).precedes(new Vector2d(-2, -1)));
+        Assertions.assertTrue(new Vector2d(0,0).precedes(new Vector2d(0, 0)));
+        Assertions.assertFalse(new Vector2d(2,0).precedes(new Vector2d(0, 0)));
     }
     @Test
     public void followsTest()
     {
         Assertions.assertTrue(new Vector2d(4,1).follows(new Vector2d(2,0)));
         Assertions.assertTrue(new Vector2d(-1,0).follows(new Vector2d(-2, -1)));
+        Assertions.assertTrue(new Vector2d(-1,0).follows(new Vector2d(-2, -1)));
+        Assertions.assertFalse(new Vector2d(-2, -1).follows(new Vector2d(-1,0)));
     }
     @Test
     public void upperRightTest()
@@ -63,5 +68,11 @@ public class Vector2dTest {
     {
         Assertions.assertEquals(new Vector2d(2,0).opposite(),new Vector2d(-2,0));
         Assertions.assertEquals(new Vector2d(1,1).opposite(),new Vector2d(-1,-1));
+    }
+
+    @Test
+    public void hashcodeTest()
+    {
+        Assertions.assertEquals(new Vector2d(2,0).hashCode(),new Vector2d(2,0).hashCode());
     }
 }
