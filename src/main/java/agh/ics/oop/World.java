@@ -12,12 +12,22 @@ public class World {
         System.out.println(position2);
         System.out.println(position1.add(position2));*/
 
-        Animal animal = new Animal();
+        /*RectangularMap map = new RectangularMap(5,7);
+
+        Animal animal = new Animal(map);
         MoveDirection[] moves = OptionsParser.parse(args);
         for (MoveDirection move: moves)
+        {
+            System.out.println(map.toString());
             animal.move(move);
+        }*/
 
-        System.out.println(animal);
+        MoveDirection[] directions = OptionsParser.parse(args);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        IEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
+
         System.out.println("system zakończył działanie");
     }
 

@@ -2,30 +2,41 @@ package agh.ics.oop;
 
 import java.util.Objects;
 
-
-//Aby stworzyc mechanizm uniemożliwiający przebywanie dwóch zwierząt w jednym miejscu należałoby stworzyć klasę mapy która przechowuje informacje o wszystkich zwierzętach
-//Należałoby podać tą mapę do konstruktora zwierzęcia
 public class Animal {
-    public MapDirection orientation;
-    public Vector2d position;
+    private MapDirection orientation;
+    private Vector2d position;
+    public final IWorldMap map;
+    public Animal(IWorldMap map)
+    {
+        this(map,new Vector2d(0,0));
+    }
 
-    public Animal()
+    public Animal(IWorldMap map, Vector2d initialPosition)
     {
         orientation = MapDirection.NORTH;
-        position = new Vector2d(2,2);
+        position = initialPosition;
+        this.map = map;
+        if (!map.place(this))
+            System.exit(1);
     }
 
-    public static boolean isSafePosition(Vector2d position, int mapSize)
+    /*private static boolean isSafePosition(Vector2d position, int mapSize)
     {
-        return position.x >= 0 && position.y >= 0 && position.x < mapSize && position.y < mapSize;
-    }
+        return position.follows(new Vector2d(0,0)) && position.precedes(new Vector2d(mapSize-1,mapSize-1));
+    }*/
 
     public String toString()
     {
-        return position.toString() + " " + orientation.toString();
+        return switch (orientation)
+        {
+            case EAST -> ">";
+            case WEST -> "<";
+            case NORTH -> "^";
+            case SOUTH -> "v";
+        };
     }
 
-    public void move(MoveDirection direction)
+    public boolean move(MoveDirection direction)
     {
         switch (direction)
         {
@@ -33,26 +44,45 @@ public class Animal {
             case LEFT -> orientation = orientation.previous();
             case FORWARD -> {
                 Vector2d newPosition = position.add(orientation.toUnitVector());
-                if (isSafePosition(newPosition,5))
-                    position = newPosition;
+                if (!map.canMoveTo(newPosition))
+                    return false;
+                position = newPosition;
+                map.place(this);
             }
             case BACKWARD -> {
                 Vector2d newPosition = position.subtract(orientation.toUnitVector());
-                if (isSafePosition(newPosition,5))
-                    position = newPosition;
+                if (!map.canMoveTo(newPosition))
+                    return false;
+                position = newPosition;
+                map.place(this);
             }
         }
+        return true;
     }
 
-    public boolean equals(Object other)
+    /*public boolean equals(Object other)
     {
         if (other == null || other.getClass() != this.getClass())
             return false;
         Animal otherA = (Animal) other;
         return this.orientation.equals(otherA.orientation) && this.position.equals(otherA.position);
-    }
+    }*/
 
     public int hashCode() {
         return Objects.hash(orientation, position);
+    }
+
+    public boolean isFacing(MapDirection orientation)
+    {
+        return this.orientation.equals(orientation);
+    }
+    public boolean isAt(Vector2d position)
+    {
+        return this.position.equals(position);
+    }
+
+    public Vector2d getPosition()
+    {
+        return position;
     }
 }
