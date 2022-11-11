@@ -5,54 +5,26 @@ import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
 
-public class RectangularMap implements IWorldMap{
-
-    private final ArrayList<Animal> animals;
-    private final Vector2d mapSize;
+public class RectangularMap extends AbstractWorldMap{
+    private final Vector2d lowerLeft;
+    private final Vector2d upperRight;
 
     public RectangularMap(int width, int height){
-        animals = new ArrayList<Animal>();
-        mapSize = new Vector2d(width,height);
+        lowerLeft = new Vector2d(0,0);
+        upperRight = new Vector2d(width-1,height-1);
     }
 
-    public String toString()
-    {
-        return new MapVisualizer(this).draw(getLowerLeft(),getUpperRight());
+    @Override
+    public Vector2d getLowerLeft() {
+        return lowerLeft;
     }
 
-    public Vector2d getLowerLeft()
-    {
-        return new Vector2d(0,0);
-    }
-
-    public Vector2d getUpperRight()
-    {
-        return mapSize.subtract(new Vector2d(1,1));
+    @Override
+    public Vector2d getUpperRight() {
+        return upperRight;
     }
 
     public boolean canMoveTo(Vector2d position) {
         return !isOccupied(position) && position.follows(getLowerLeft()) && position.precedes(getUpperRight());
-    }
-
-    public boolean place(Animal animal) {
-        if (!canMoveTo(animal.getPosition()))
-            return false;
-        animals.add(animal);
-        return true;
-    }
-
-    public boolean isOccupied(Vector2d position)
-    {
-        for (Animal a : animals)
-            if (a.isAt(position))
-                return true;
-        return false;
-    }
-
-    public Object objectAt(Vector2d position) {
-        for (Animal a : animals)
-            if (a.isAt(position))
-                return a;
-        return null;
     }
 }

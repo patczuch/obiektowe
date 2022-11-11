@@ -2,10 +2,10 @@ package agh.ics.oop;
 
 import java.util.Objects;
 
-public class Animal {
+public class Animal implements IMapElement{
     private MapDirection orientation;
     private Vector2d position;
-    public final IWorldMap map;
+    private final IWorldMap map;
     public Animal(IWorldMap map)
     {
         this(map,new Vector2d(0,0));
@@ -19,11 +19,6 @@ public class Animal {
         if (!map.place(this))
             System.exit(1);
     }
-
-    /*private static boolean isSafePosition(Vector2d position, int mapSize)
-    {
-        return position.follows(new Vector2d(0,0)) && position.precedes(new Vector2d(mapSize-1,mapSize-1));
-    }*/
 
     public String toString()
     {
@@ -59,15 +54,6 @@ public class Animal {
         }
         return true;
     }
-
-    /*public boolean equals(Object other)
-    {
-        if (other == null || other.getClass() != this.getClass())
-            return false;
-        Animal otherA = (Animal) other;
-        return this.orientation.equals(otherA.orientation) && this.position.equals(otherA.position);
-    }*/
-
     public int hashCode() {
         return Objects.hash(orientation, position);
     }
