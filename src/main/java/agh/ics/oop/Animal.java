@@ -1,11 +1,14 @@
 package agh.ics.oop;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
-public class Animal implements IMapElement{
+public class Animal{
     private MapDirection orientation;
     private Vector2d position;
     private final IWorldMap map;
+    private final ArrayList<IPositionChangeObserver> observers;
+
     public Animal(IWorldMap map)
     {
         this(map,new Vector2d(0,0));
@@ -16,6 +19,7 @@ public class Animal implements IMapElement{
         orientation = MapDirection.NORTH;
         position = initialPosition;
         this.map = map;
+        observers = new ArrayList<>();
         if (!map.place(this))
             System.exit(1);
     }
@@ -23,12 +27,12 @@ public class Animal implements IMapElement{
     public String toString()
     {
         return switch (orientation)
-        {
-            case EAST -> ">";
-            case WEST -> "<";
-            case NORTH -> "^";
-            case SOUTH -> "v";
-        };
+                {
+                    case EAST -> ">";
+                    case WEST -> "<";
+                    case NORTH -> "^";
+                    case SOUTH -> "v";
+                };
     }
 
     public boolean move(MoveDirection direction)
@@ -41,19 +45,23 @@ public class Animal implements IMapElement{
                 Vector2d newPosition = position.add(orientation.toUnitVector());
                 if (!map.canMoveTo(newPosition))
                     return false;
+                Vector2d oldPosition = position;
                 position = newPosition;
-                map.place(this);
+                positionChanged(oldPosition);
             }
             case BACKWARD -> {
                 Vector2d newPosition = position.subtract(orientation.toUnitVector());
                 if (!map.canMoveTo(newPosition))
                     return false;
+                Vector2d oldPosition = position;
                 position = newPosition;
-                map.place(this);
+                positionChanged(oldPosition);
             }
         }
         return true;
     }
+
+
     public int hashCode() {
         return Objects.hash(orientation, position);
     }
@@ -70,5 +78,21 @@ public class Animal implements IMapElement{
     public Vector2d getPosition()
     {
         return position;
+    }
+
+    public void addObserver(IPositionChangeObserver observer)
+    {
+        observers.add(observer);
+    }
+
+    public void removeObserver(IPositionChangeObserver observer)
+    {
+        observers.remove(observer);
+    }
+
+    private void positionChanged (Vector2d oldPosition)
+    {
+        for (IPositionChangeObserver observer : observers)
+            observer.positionChanged(oldPosition, position);
     }
 }

@@ -1,12 +1,14 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class GrassField extends AbstractWorldMap{
 
     Random rand;
     int grassAmount;
+
+    protected final HashMap<Vector2d, Grass> grass;
 
     public GrassField(int grassAmount)
     {
@@ -17,6 +19,8 @@ public class GrassField extends AbstractWorldMap{
     {
         this.grassAmount = grassAmount;
         this.rand = new Random(seed);
+
+        grass = new HashMap<>();
 
         for (int i = 0; i<grassAmount; i++)
             createRandomGrass();
@@ -29,7 +33,7 @@ public class GrassField extends AbstractWorldMap{
         while (isOccupied(newPosition))
             newPosition = new Vector2d(rand.nextInt(maxRand),rand.nextInt(maxRand));
         Grass newGrass = new Grass(newPosition);
-        mapElements.add(newGrass);
+        grass.put(newPosition,newGrass);
     }
 
     @Override
@@ -39,38 +43,32 @@ public class GrassField extends AbstractWorldMap{
 
     @Override
     public Vector2d getLowerLeft() {
-        if (mapElements.size() == 0)
+        if (animals.size() == 0 && grass.size() == 0)
             return new Vector2d(0,0);
-        Vector2d lowerLeft = mapElements.get(0).getPosition();
-        for (IMapElement el : mapElements)
-            lowerLeft = lowerLeft.lowerLeft(el.getPosition());
+        Vector2d lowerLeft = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        for (Vector2d pos : animals.keySet())
+            lowerLeft = lowerLeft.lowerLeft(pos);
+        for (Vector2d pos : grass.keySet())
+            lowerLeft = lowerLeft.lowerLeft(pos);
         return lowerLeft;
     }
 
     @Override
     public Object objectAt(Vector2d position) {
-        for (int i = 0; i < mapElements.size(); i++)
-            if (mapElements.get(i).getPosition().equals(position))
-                if (mapElements.get(i).getClass() == Animal.class)
-                    return mapElements.get(i);
-                else
-                {
-                    for (int j = i+1; j < mapElements.size(); j++)
-                        if (mapElements.get(j).getPosition().equals(position) && mapElements.get(j).getClass() == Animal.class)
-                            return mapElements.get(j);
-                    return mapElements.get(i);
-                }
-        return null;
+        if (animals.containsKey(position))
+            return animals.get(position);
+        return grass.get(position);
     }
 
     @Override
     public Vector2d getUpperRight() {
-        if (mapElements.size() == 0)
+        if (animals.size() == 0 && grass.size() == 0)
             return new Vector2d(0,0);
-        Vector2d upperRight = mapElements.get(0).getPosition();
-        for (IMapElement el : mapElements)
-            upperRight = upperRight.upperRight(el.getPosition());
+        Vector2d upperRight = new Vector2d(Integer.MIN_VALUE,Integer.MIN_VALUE);
+        for (Vector2d pos : animals.keySet())
+            upperRight = upperRight.upperRight(pos);
+        for (Vector2d pos : grass.keySet())
+            upperRight = upperRight.upperRight(pos);
         return upperRight;
     }
-
 }

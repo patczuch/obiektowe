@@ -1,6 +1,6 @@
 package agh.ics.oop;
 
-public class Grass implements IMapElement{
+public class Grass{
 
     private final Vector2d position;
 
@@ -9,7 +9,6 @@ public class Grass implements IMapElement{
         this.position = position;
     }
 
-    @Override
     public Vector2d getPosition() {
         return position;
     }
