@@ -55,7 +55,7 @@ public class GrassField extends AbstractWorldMap{
                     return mapElements.get(i);
                 else
                 {
-                    for (int j = i+1; j < mapElements.size(); j++)
+                    for (int j = i+1; j < mapElements.size(); j++) // nie lepszy były "for-each"?
                         if (mapElements.get(j).getPosition().equals(position) && mapElements.get(j).getClass() == Animal.class)
                             return mapElements.get(j);
                     return mapElements.get(i);
