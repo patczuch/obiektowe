@@ -63,4 +63,14 @@ public class Vector2d {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+    public int compareX(Vector2d v)
+    {
+        return x - v.x;
+    }
+
+    public int compareY(Vector2d v)
+    {
+        return y - v.y;
+    }
 }

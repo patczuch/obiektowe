@@ -7,7 +7,6 @@ public class GrassField extends AbstractWorldMap{
 
     Random rand;
     int grassAmount;
-
     protected final HashMap<Vector2d, Grass> grass;
 
     public GrassField(int grassAmount)
@@ -34,6 +33,7 @@ public class GrassField extends AbstractWorldMap{
             newPosition = new Vector2d(rand.nextInt(maxRand),rand.nextInt(maxRand));
         Grass newGrass = new Grass(newPosition);
         grass.put(newPosition,newGrass);
+        boundary.place(newPosition,Grass.class);
     }
 
     @Override
@@ -43,14 +43,10 @@ public class GrassField extends AbstractWorldMap{
 
     @Override
     public Vector2d getLowerLeft() {
-        if (animals.size() == 0 && grass.size() == 0)
-            return new Vector2d(0,0);
-        Vector2d lowerLeft = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        for (Vector2d pos : animals.keySet())
-            lowerLeft = lowerLeft.lowerLeft(pos);
-        for (Vector2d pos : grass.keySet())
-            lowerLeft = lowerLeft.lowerLeft(pos);
-        return lowerLeft;
+        return  new Vector2d(
+                boundary.elementsSortedByX.first().getKey().x,
+                boundary.elementsSortedByY.first().getKey().y
+        );
     }
 
     @Override
@@ -62,13 +58,9 @@ public class GrassField extends AbstractWorldMap{
 
     @Override
     public Vector2d getUpperRight() {
-        if (animals.size() == 0 && grass.size() == 0)
-            return new Vector2d(0,0);
-        Vector2d upperRight = new Vector2d(Integer.MIN_VALUE,Integer.MIN_VALUE);
-        for (Vector2d pos : animals.keySet())
-            upperRight = upperRight.upperRight(pos);
-        for (Vector2d pos : grass.keySet())
-            upperRight = upperRight.upperRight(pos);
-        return upperRight;
+        return  new Vector2d(
+                boundary.elementsSortedByX.last().getKey().x,
+                boundary.elementsSortedByY.last().getKey().y
+        );
     }
 }

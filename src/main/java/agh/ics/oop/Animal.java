@@ -20,8 +20,7 @@ public class Animal{
         position = initialPosition;
         this.map = map;
         observers = new ArrayList<>();
-        if (!map.place(this))
-            System.exit(1);
+        map.place(this);
     }
 
     public String toString()

@@ -20,7 +20,7 @@ public class AnimalTest {
     {
         RectangularMap recMap = new RectangularMap(5,5);
         Animal a = new Animal(recMap, new Vector2d(2,2));
-
+        Assertions.assertThrowsExactly(IllegalArgumentException.class, () -> new Animal(recMap, new Vector2d(2,2)));
         a.move(MoveDirection.FORWARD);
         Assertions.assertTrue(a.isAt(new Vector2d(2,3)));
         a.move(MoveDirection.LEFT);
@@ -84,7 +84,7 @@ public class AnimalTest {
         a.move(MoveDirection.BACKWARD);
         a.move(MoveDirection.LEFT);
         Assertions.assertNotEquals(a,b);
-    }*/
+    }
     @Test
     public void hashCodeTest()
     {
@@ -92,7 +92,7 @@ public class AnimalTest {
         Animal a = new Animal(recMap);
         Animal b = new Animal(recMap);
         Assertions.assertEquals(a.hashCode(),b.hashCode());
-    }
+    }*/
     @Test
     public void isPositionEqualTest()
     {
