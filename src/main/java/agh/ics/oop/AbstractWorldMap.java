@@ -7,11 +7,9 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     protected final HashMap<Vector2d, Animal> animals;
     protected final MapVisualizer mapVisualizer;
 
-    protected final MapBoundary boundary;
     protected AbstractWorldMap() {
         animals = new HashMap<>();
         mapVisualizer = new MapVisualizer(this);
-        boundary = new MapBoundary();
     }
 
     @Override
@@ -19,9 +17,7 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         if (!canMoveTo(animal.getPosition()))
             throw new IllegalArgumentException("Can't place animal at "+animal.getPosition());
         animals.put(animal.getPosition(),animal);
-        boundary.place(animal.getPosition(),Animal.class);
         animal.addObserver(this);
-        animal.addObserver(boundary);
         return true;
     }
 
@@ -31,7 +27,7 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     }
 
     @Override
-    public Object objectAt(Vector2d position) {
+    public IMapElement objectAt(Vector2d position) {
         return animals.get(position);
     }
 

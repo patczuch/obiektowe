@@ -3,7 +3,7 @@ package agh.ics.oop;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Animal{
+public class Animal implements IMapElement{
     private MapDirection orientation;
     private Vector2d position;
     private final IWorldMap map;
@@ -72,6 +72,23 @@ public class Animal{
     public boolean isAt(Vector2d position)
     {
         return this.position.equals(position);
+    }
+
+    @Override
+    public String getTexturePath() {
+        return switch (orientation)
+                {
+                    case EAST -> "right.png";
+                    case WEST -> "left.png";
+                    case NORTH -> "up.png";
+                    case SOUTH -> "down.png";
+                };
+    }
+
+    @Override
+    public String getLabel()
+    {
+        return getPosition().toString();
     }
 
     public Vector2d getPosition()
